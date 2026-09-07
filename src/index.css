@@ -4,6 +4,9 @@ html {
   /* scroll-snap-type: y mandatory; */
 }
 
+body{
+    background: #e6e6e5;
+}
 
 *{
   margin: 0;

@@ -285,7 +285,7 @@
     margin-top: 50px;
   }
   .about-headline {
-    margin: 10px 0;
+    margin: 15px 0;
   }
 }
 
@@ -328,6 +328,10 @@
   }
   .carousel {
     min-height: 440px;
+  }
+
+  .face p{
+    font-size: 11px;
   }
 
 }

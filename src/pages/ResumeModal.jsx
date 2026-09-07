@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { X, Maximize2 } from 'lucide-react'
+import { X, Maximize2, Download } from 'lucide-react'
 import resumePdf from '../assets/Daniel_Okere_CV.pdf'
 import './ResumeModal.css'
 
@@ -30,15 +30,26 @@ export default function ResumeModal({ onClose }) {
         </div>
 
         <div className="resume-modal-footer">
-          <a
-            href={resumePdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="resume-open-full"
-          >
-            Open full size
-            <Maximize2 size={13} />
-          </a>
+          <div className="resume-modal-actions">
+            <a
+              href={resumePdf}
+              download="Daniel_Okere_CV.pdf"
+              className="resume-download"
+            >
+              Download
+              <Download size={13} />
+            </a>
+
+            <a
+              href={resumePdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="resume-open-full"
+            >
+              Open full size
+              <Maximize2 size={13} />
+            </a>
+          </div>
         </div>
       </div>
     </div>

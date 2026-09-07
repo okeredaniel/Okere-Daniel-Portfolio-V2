@@ -77,14 +77,6 @@ export default function Hero({ onResumeOpen }) {
             <button className="btn-ghost1" aria-label="Download resume">
               Software Developer
             </button>  
-            <a
-              href={resumePdf}
-              download="Daniel_Okere_CV.pdf"
-              className="btn-ghost"
-              aria-label="Download resume"
-            >
-              <Download size={16} strokeWidth={2.5} />
-            </a>
           </div>
         </div>
 

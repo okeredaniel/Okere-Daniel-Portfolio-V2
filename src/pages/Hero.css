@@ -401,11 +401,19 @@
 
   .cta-group {
     gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .btn-ghost1 {
     font-size: 12px;
     padding: 10px 14px;
+  }
+}
+
+@media (max-width: 433px) {
+  .tagline {
+    font-size: 1.9rem;
   }
 }
 
@@ -418,5 +426,7 @@
 
   .btn-ghost {
     align-self: flex-start;
+    
   }
+
 }

@@ -138,27 +138,44 @@
   flex-shrink: 0;
 }
 
-/* ... (rest of the CSS remains the same) ... */
+.resume-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
 
+.resume-download,
 .resume-open-full {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 
-  width: 100%;
+  flex: 1;
   padding: 12px 18px;
 
   border-radius: 999px;
 
-  background: #f5f5f0;
-  color: #0b0f10;
-
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
-
   transition: all 0.2s ease;
+}
+
+.resume-download {
+  background: #d4a85d;
+  color: #0b0f10;
+}
+
+.resume-download:hover {
+  transform: translateY(-2px);
+  background: #e7ba74;
+}
+
+.resume-open-full {
+  background: #f5f5f0;
+  color: #0b0f10;
 }
 
 .resume-open-full:hover {
@@ -204,7 +221,13 @@
     padding: 15px;
   }
 
+  .resume-modal-actions {
+    flex-direction: column;
+  }
+
+  .resume-download,
   .resume-open-full {
+    width: 100%;
     font-size: 13px;
     padding: 11px;
   }
