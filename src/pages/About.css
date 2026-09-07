@@ -57,7 +57,7 @@
 @media (max-width: 900px) {
   .about-columns {
     flex-direction: column;
-    /* gap: 40px; */
+    gap: 40px;
   }
   .about-columns-right {
     text-align: center;
