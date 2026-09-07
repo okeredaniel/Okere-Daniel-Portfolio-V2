@@ -8,8 +8,7 @@ import About from './pages/About.jsx'
 import ResumeModal from './pages/ResumeModal.jsx'
 import Work from './pages/Work.jsx'
 import Skills from './pages/Skills.jsx'
-import Contact from './pages/Contact.jsx'
-import ProjectsPage from './pages/ProjectsPage.jsx'
+import Contact from './pages/Contact.jsx' 
 
 // gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 
@@ -47,7 +46,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
       </Routes>
     </BrowserRouter>
   )
