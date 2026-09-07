@@ -1,0 +1,67 @@
+.hero-terminal {
+  width: 350px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0c0d12;
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.35);
+  font-family: 'Space Grotesk', monospace;
+}
+
+.hero-terminal-bar {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #17181f;
+}
+
+.hero-terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+.hero-terminal-body {
+  padding: 16px;
+  min-height: 140px;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.hero-terminal-line {
+  color: #d8d9e0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hero-terminal-prompt {
+  color: #5bd957;
+  font-weight: 700;
+}
+
+.hero-terminal-output {
+  color: #9da3b4;
+}
+
+.hero-terminal-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 13px;
+  margin-left: 2px;
+  background: #f5f5f0;
+  vertical-align: middle;
+  animation: terminal-blink 1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 640px) {
+  .hero-terminal {
+    width: 100%;
+  }
+}

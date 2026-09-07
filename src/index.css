@@ -1,0 +1,45 @@
+html {
+  /* scroll-behavior: smooth;
+  /* 1. Enable native scroll snapping on the main viewport */
+  /* scroll-snap-type: y mandatory; */
+}
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Unbounded', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+    user-select: none;
+  -webkit-user-select: none;   /* Safari */
+  -moz-user-select: none;      /* older Firefox */
+  -ms-user-select: none;    
+  
+}
+
+::-webkit-scrollbar{
+  display: none;
+}
+
+@font-face{
+  font-family: 'Newake';
+  src:url("./assets/SpaceGrotesk-Regular.ttf")
+}
+/* 
+#smooth-wrapper {
+  overflow: hidden;
+  position: fixed;
+  inset: 0;
+}
+
+.snap-section {
+  height: 100vh;
+} */
+
+section {
+  /* height: 100vh;          */
+  /* scroll-snap-align: start; 
+  scroll-snap-stop: always;  */
+}

@@ -1,0 +1,212 @@
+/* --- NEW / MODIFIED SECTIONS ARE MARKED WITH COMMENTS --- */
+
+.resume-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.65);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 30px;
+  animation: overlayIn 0.2s ease;
+
+  /* FIX 1: Ensure overlay is exactly viewport height */
+  height: 100vh;
+}
+
+/* ... (keyframes remain the same) ... */
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.resume-modal {
+  width: min(1000px, 92vw);
+  /* FIX 2: Constrain the max height to viewport height */
+  height: min(800px, 90vh);
+  /* Ensure parent is set for child flexbox */
+  position: relative;
+
+  background: #161412;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.55);
+
+  animation: modalIn 0.25s ease;
+}
+
+/* ... (keyframes remain the same) ... */
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.resume-modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 22px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Prevents this section from shrinking */
+  flex-shrink: 0;
+}
+
+/* ... (title and close button CSS remain the same) ... */
+
+.resume-modal-title {
+  color: #f5f5f0;
+  font-family: "Unbounded", sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.resume-modal-close {
+  width: 36px;
+  height: 36px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f5f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resume-modal-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.resume-modal-body {
+  /* FIX 3: Allow this container to grow/shrink to fill the remaining space */
+  flex: 1;
+
+  padding: 20px;
+
+  overflow: hidden;
+  /* Necessary context for the iframe inside */
+  position: relative;
+}
+
+
+
+.resume-iframe {
+  /* FIX 4: Explicitly fill the parent container */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;   /* ← this overwrites your "100% + 20px" from above */
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  background: white;
+}
+.resume-modal-footer {
+  padding: 20px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Prevents this section from shrinking */
+  flex-shrink: 0;
+}
+
+/* ... (rest of the CSS remains the same) ... */
+
+.resume-open-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  padding: 12px 18px;
+
+  border-radius: 999px;
+
+  background: #f5f5f0;
+  color: #0b0f10;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: all 0.2s ease;
+}
+
+.resume-open-full:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+  .resume-overlay {
+    padding: 20px;
+  }
+
+  .resume-modal {
+    width: 95vw;
+    height: 90vh;
+  }
+
+  .resume-modal-body {
+    padding: 15px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .resume-overlay {
+    padding: 10px;
+  }
+
+  .resume-modal {
+    width: 100%;
+    height: 95vh;
+    border-radius: 14px;
+  }
+
+  .resume-modal-top {
+    padding: 15px;
+  }
+
+  .resume-modal-footer {
+    padding: 15px;
+  }
+
+  .resume-open-full {
+    font-size: 13px;
+    padding: 11px;
+  }
+}
+

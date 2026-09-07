@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@800&family=Space+Grotesk:wght@400;500&display=swap');
+
+.work {
+  position: relative;
+  min-height: 100vh;
+  background: #e6e6e5;
+  font-family: 'Space Grotesk', sans-serif;
+  display: flex;
+  align-items: center;
+  padding: 40px 32px;
+  z-index: 2;
+}
+
+.work-inner {
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+.work-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 11px;
+}
+
+.work-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #d97757;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.work-headline {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: clamp(28px, 4vw, 40px);
+  color: #16171a;
+  margin: 0;
+}
+
+.work-more-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f5f5f0;
+  background: #16171a;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 180ms ease;
+}
+
+.work-more-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------- bento grid ----------
+   6 virtual columns so tiles can span 2 (thirds), 3 (halves),
+   or 6 (full width). 3 explicit rows match the reference:
+   row 1 = three equal tiles, row 2 = two wide tiles,
+   row 3 = one full-width tile. Needs exactly 6 tiles to fill
+   cleanly — see nth-child(n+7) fallback below for extras. */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 300px 320px 500px;
+  grid-auto-rows: 300px;
+  gap: 14px;
+}
+
+.work-tile:nth-child(1),
+.work-tile:nth-child(2),
+.work-tile:nth-child(3) {
+  grid-column: span 2;
+  grid-row: 1;
+}
+
+.work-tile:nth-child(4) {
+  grid-column: span 3;
+  grid-row: 2;
+}
+
+.work-tile:nth-child(5) {
+  grid-column: span 3;
+  grid-row: 2;
+}
+
+.work-tile:nth-child(6) {
+  grid-column: span 6;
+  grid-row: 3;
+}
+
+/* fallback for a 7th+ tile: half-width, wraps into new rows */
+.work-tile:nth-child(n + 7) {
+  grid-column: span 3;
+}
+
+.work-tile {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.384);
+}
+
+/* the actual photo — separate layer so it can zoom without
+   affecting the tile's shadow, border-radius, or grid sizing */
+.work-tile-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 450ms ease;
+}
+
+.work-tile:hover .work-tile-image {
+  transform: scale(1.08);
+}
+
+.work-tile-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.65));
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.work-tile:hover .work-tile-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.work-tile-name {
+  margin: 0;
+  color: #f5f5f0;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.work-tile-tech {
+  margin: 3px 0 0;
+  color: rgba(245, 245, 240, 0.7);
+  font-size: 11px;
+}
+
+.work-tile-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(245, 245, 240, 0.15);
+  border: 1px solid rgba(245, 245, 240, 0.3);
+  color: #f5f5f0;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 200ms ease;
+}
+
+.work-tile-visit:hover {
+  background: rgba(245, 245, 240, 0.3);
+}
+
+.work-descrip {
+  font-size: 14px;
+  color: #16171a;
+  max-width: 600px;
+}
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 720px) {
+  .work {
+    padding: 0px 20px;
+  }
+  .work-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-rows: 220px;
+  }
+  .work-tile,
+  .work-tile:nth-child(1),
+  .work-tile:nth-child(2),
+  .work-tile:nth-child(3),
+  .work-tile:nth-child(4),
+  .work-tile:nth-child(5),
+  .work-tile:nth-child(6),
+  .work-tile:nth-child(n + 7) {
+    grid-column: span 1;
+    grid-row: auto;
+    height: 220px;
+  }
+}
