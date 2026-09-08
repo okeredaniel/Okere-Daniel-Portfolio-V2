@@ -6,6 +6,8 @@ html {
 
 body{
     background: #e6e6e5;
+    
+    /* width: 900vw; */
 }
 
 *{
@@ -22,8 +24,27 @@ body{
   
 }
 
-::-webkit-scrollbar{
-  display: none;
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(33, 33, 33, 0.45) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(33, 33, 33, 0.45);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(33, 33, 33, 0.65);
 }
 
 @font-face{

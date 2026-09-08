@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { X, Maximize2, Download } from 'lucide-react'
-import resumePdf from '../assets/Daniel_Okere_CV.pdf'
+import resumePdf from '../assets/Daniel Okere CV.pdf'
 import './ResumeModal.css'
 
 export default function ResumeModal({ onClose }) {

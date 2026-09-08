@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Sparkles, ArrowRight, Download } from "lucide-react";
 import log from "../assets/log.png";
-import resumePdf from "../assets/Daniel_Okere_CV.pdf";
+import resumePdf from "../assets/Daniel Okere CV.pdf";
 import "./Hero.css";
 import Terminal from "../pages/Heroterminal.jsx";
 

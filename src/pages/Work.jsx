@@ -18,7 +18,7 @@ const PROJECTS = [
   { name: 'Stryde', tech: 'React · model-viewer', image: ford, url: 'https://example.com/stryde' },
   { name: 'Project 4', tech: 'Tech stack', image: ford, url: 'https://example.com' },
   { name: 'Project 5', tech: 'Tech stack', image: ford, url: 'https://example.com' },
-  { name: 'Vector', tech: 'Tech stack', image: ford, url: 'https://example.com' },
+  { name: 'Project 6', tech: 'Tech stack', image: ford, url: 'https://example.com' },
 ]
 
 export default function Work() {
@@ -67,30 +67,55 @@ export default function Work() {
         </div>
 
         <div className="work-grid">
-          {PROJECTS.map((project) => (
-            <div key={project.name} className="work-tile">
+          {PROJECTS.map((project) => {
+            const isVectorProject = project.name === 'Vector'
+
+            return (
               <div
-                className="work-tile-image"
-                style={{ backgroundImage: `url(${project.image})` }}
-              />
-              <div className="work-tile-info">
-                <div className="work-tile-text">
-                  <p className="work-tile-name">{project.name}</p>
-                  <p className="work-tile-tech">{project.tech}</p>
+                key={project.name}
+                className={`work-tile ${isVectorProject ? 'work-tile-vector' : 'work-tile-skeleton'}`}
+              >
+                {isVectorProject ? (
+                  <div
+                    className="work-tile-image"
+                    style={{ backgroundImage: `url(${project.image})` }}
+                  />
+                ) : (
+                  <div className="work-tile-image work-skeleton-image" aria-hidden="true">
+                    <span className="work-skeleton-block work-skeleton-block-lg" />
+                    <span className="work-skeleton-block work-skeleton-block-md" />
+                    <span className="work-skeleton-block work-skeleton-block-sm" />
+                  </div>
+                )}
+
+                <div className="work-tile-info">
+                  <div className="work-tile-text">
+                    <p className={`work-tile-name ${!isVectorProject ? 'is-placeholder' : ''}`}>
+                      {project.name}
+                    </p>
+                    <p className={`work-tile-tech ${!isVectorProject ? 'is-placeholder' : ''}`}>
+                      {project.tech}
+                    </p>
+                  </div>
+
+                  {isVectorProject ? (
+                    <a
+                      className="work-tile-visit"
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Visit site
+                      <ArrowRight size={13} />
+                    </a>
+                  ) : (
+                    <span className="work-tile-placeholder">Coming soon</span>
+                  )}
                 </div>
-                <a
-                  className="work-tile-visit"
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Visit site
-                  <ArrowRight size={13} />
-                </a>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

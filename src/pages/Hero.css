@@ -2,9 +2,8 @@
 
 .hero {
   position: relative;
-  min-height: 100svh; /* dynamic viewport height, handles mobile address bar */
-  width: 100%;        /* not 100vw — avoids scrollbar-width overflow */
-  overflow: hidden;
+  min-height: 100vh; /* dynamic viewport height, handles mobile address bar */
+ 
   display: flex;
   flex-direction: column;
   font-family: 'Space Grotesk', sans-serif;
@@ -22,20 +21,6 @@
   z-index: 0;
 } */
 
-.hero-bg-fallback {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  /* background: radial-gradient(circle at top left, #2a2320 0%, #0e0c0b 55%, #060505 100%); */
-}
-
-.hero-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  
-}
-
 /* ---------- grain ---------- */
 
 .hero-grain {
@@ -51,7 +36,6 @@
 .hero {
   position: relative;
   height: 100vh;
-  width: 100vw;
   overflow: hidden;
 }
 
@@ -127,13 +111,6 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-}
-
-.logo-image {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  border-radius: 8px;
 }
 
 .logo {

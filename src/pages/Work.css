@@ -78,6 +78,65 @@
   gap: 14px;
 }
 
+.work-tile {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.384);
+  background: #2d4dac; /* darker tile bg instead of translucent white */
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.work-tile-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(160, 160, 160, 0.726);
+  transition: transform 450ms ease;
+}
+
+.work-tile:hover .work-tile-image {
+  transform: scale(1.08);
+}
+
+
+.work-skeleton-image {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.04) 65%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 250% 100%;
+  animation: glossy-skeleton 1.8s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 22px 18px 20px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.work-skeleton-block {
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+@keyframes glossy-skeleton {
+  0% {
+    background-position: 150% 0;
+  }
+  100% {
+    background-position: -150% 0;
+  }
+}
+
 .work-tile:nth-child(1),
 .work-tile:nth-child(2),
 .work-tile:nth-child(3) {
@@ -111,6 +170,8 @@
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.384);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(10, 10, 10, 0.05);
 }
 
 /* the actual photo — separate layer so it can zoom without
@@ -125,6 +186,44 @@
 
 .work-tile:hover .work-tile-image {
   transform: scale(1.08);
+}
+
+.work-tile-skeleton {
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.18));
+}
+
+.work-skeleton-image {
+  /* background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.8) 45%, rgba(255,255,255,0.18) 100%); */
+  background-size: 200% 100%;
+  animation: glossy-skeleton 1.5s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 22px 18px 20px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+}
+
+.work-skeleton-block {
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04);
+}
+
+.work-skeleton-block-lg {
+  width: 70%;
+  height: 18px;
+}
+
+.work-skeleton-block-md {
+  width: 52%;
+  height: 12px;
+}
+
+.work-skeleton-block-sm {
+  width: 34%;
+  height: 10px;
 }
 
 .work-tile-info {
@@ -162,6 +261,54 @@
   font-size: 11px;
 }
 
+.work-tile-name.is-placeholder,
+.work-tile-tech.is-placeholder,
+.work-tile-placeholder {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+}
+
+.work-tile-name.is-placeholder {
+  width: 100px;
+  height: 18px;
+}
+
+.work-tile-tech.is-placeholder {
+  width: 130px;
+  height: 12px;
+  margin-top: 10px;
+}
+
+.work-tile-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
+  height: 32px;
+  padding: 0 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.work-tile-placeholder::before,
+.work-tile-name.is-placeholder::before,
+.work-tile-tech.is-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,0.12), rgba(255,255,255,0.72), rgba(255,255,255,0.12));
+  background-size: 200% 100%;
+  animation: glossy-skeleton 1.5s ease-in-out infinite;
+}
+
 .work-tile-visit {
   display: inline-flex;
   align-items: center;
@@ -180,6 +327,15 @@
 
 .work-tile-visit:hover {
   background: rgba(245, 245, 240, 0.3);
+}
+
+@keyframes glossy-skeleton {
+  0% {
+   background-position: 200% 0;
+  }
+  100% {
+   background-position: -200% 0;
+  }
 }
 
 .work-descrip {
