@@ -364,7 +364,7 @@
   .hero-content {
     flex-direction: column;
     align-items: stretch;
-    padding: 0 20px 65px;
+    padding: 0 20px 80px;
     gap: 24px;
   }
 
