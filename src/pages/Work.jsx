@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './Work.css'
-import ford from '../assets/FORD.jpg'
+import ford from '../assets/peppermint.png'
 import vector from '../assets/vec.png'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -13,8 +13,8 @@ gsap.registerPlugin(ScrollTrigger)
 // bento layout in Work.css (nth-child 1-3 = top row, 4-5 = middle
 // row, 6 = full-width bottom tile)
 const PROJECTS = [
-  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: 'https://example.com/watchhub' },
-  { name: 'Dispatch', tech: 'Tauri · React · MongoDB', image: ford, url: 'https://example.com/dispatch' },
+  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: '#' },
+  { name: 'Peppermint', tech: 'React · JS · Gsap', image: ford, url: 'https://peppermint-wip-v1.vercel.app/' },
   { name: 'Stryde', tech: 'React · model-viewer', image: ford, url: 'https://example.com/stryde' },
   { name: 'Project 4', tech: 'Tech stack', image: ford, url: 'https://example.com' },
   { name: 'Project 5', tech: 'Tech stack', image: ford, url: 'https://example.com' },
@@ -68,7 +68,7 @@ export default function Work() {
 
         <div className="work-grid">
           {PROJECTS.map((project) => {
-            const isVectorProject = project.name === 'Vector'
+     const isVectorProject = ['Vector', 'Peppermint'].includes(project.name);
 
             return (
               <div
