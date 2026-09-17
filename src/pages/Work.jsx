@@ -68,54 +68,55 @@ export default function Work() {
 
         <div className="work-grid">
           {PROJECTS.map((project) => {
-     const isVectorProject = ['Vector', 'Peppermint'].includes(project.name);
+  const hasRealContent = ['Vector', 'Peppermint'].includes(project.name);
+  const isLinkable = ['Peppermint'].includes(project.name);
 
-            return (
-              <div
-                key={project.name}
-                className={`work-tile ${isVectorProject ? 'work-tile-vector' : 'work-tile-skeleton'}`}
-              >
-                {isVectorProject ? (
-                  <div
-                    className="work-tile-image"
-                    style={{ backgroundImage: `url(${project.image})` }}
-                  />
-                ) : (
-                  <div className="work-tile-image work-skeleton-image" aria-hidden="true">
-                    <span className="work-skeleton-block work-skeleton-block-lg" />
-                    <span className="work-skeleton-block work-skeleton-block-md" />
-                    <span className="work-skeleton-block work-skeleton-block-sm" />
-                  </div>
-                )}
+  return (
+    <div
+      key={project.name}
+      className={`work-tile ${hasRealContent ? 'work-tile-vector' : 'work-tile-skeleton'}`}
+    >
+      {hasRealContent ? (
+        <div
+          className="work-tile-image"
+          style={{ backgroundImage: `url(${project.image})` }}
+        />
+      ) : (
+        <div className="work-tile-image work-skeleton-image" aria-hidden="true">
+          <span className="work-skeleton-block work-skeleton-block-lg" />
+          <span className="work-skeleton-block work-skeleton-block-md" />
+          <span className="work-skeleton-block work-skeleton-block-sm" />
+        </div>
+      )}
 
-                <div className="work-tile-info">
-                  <div className="work-tile-text">
-                    <p className={`work-tile-name ${!isVectorProject ? 'is-placeholder' : ''}`}>
-                      {project.name}
-                    </p>
-                    <p className={`work-tile-tech ${!isVectorProject ? 'is-placeholder' : ''}`}>
-                      {project.tech}
-                    </p>
-                  </div>
+      <div className="work-tile-info">
+        <div className="work-tile-text">
+          <p className={`work-tile-name ${!hasRealContent ? 'is-placeholder' : ''}`}>
+            {project.name}
+          </p>
+          <p className={`work-tile-tech ${!hasRealContent ? 'is-placeholder' : ''}`}>
+            {project.tech}
+          </p>
+        </div>
 
-                  {isVectorProject ? (
-                    <a
-                      className="work-tile-visit"
-                      href={project.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Visit site
-                      <ArrowRight size={13} />
-                    </a>
-                  ) : (
-                    <span className="work-tile-placeholder">Coming soon</span>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+        {isLinkable ? (
+          <a
+            className="work-tile-visit"
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Visit site
+            <ArrowRight size={13} />
+          </a>
+        ) : (
+          <span className="work-tile-placeholder">Coming soon</span>
+        )}
+      </div>
+    </div>
+  )
+})}
         </div>
       </div>
     </section>
