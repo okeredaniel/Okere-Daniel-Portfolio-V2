@@ -48,10 +48,19 @@ export default function Work() {
           trigger: sectionRef.current,
           start: 'top 75%',
           toggleActions: 'play none none reverse',
+          invalidateOnRefresh: true,
         },
       })
     }, sectionRef)
-    return () => ctx.revert()
+
+    const refresh = () => ScrollTrigger.refresh()
+    window.addEventListener('load', refresh)
+    document.fonts?.ready.then(refresh)
+
+    return () => {
+      window.removeEventListener('load', refresh)
+      ctx.revert()
+    }
   }, [])
 
   // arrow cursor that follows the mouse and flips left/right over the carousel
@@ -174,7 +183,7 @@ export default function Work() {
               bumpCursor()
             }}
           >
-            {PROJECTS.map((project) => (
+            {PROJECTS.map((project, index) => (
               <SwiperSlide
                 key={project.name}
                 className="work-slide"
@@ -183,7 +192,8 @@ export default function Work() {
                   className="work-slide__img"
                   src={project.image}
                   alt={`${project.name} preview`}
-                  loading="lazy"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
                   draggable="false"
                 />
               </SwiperSlide>
