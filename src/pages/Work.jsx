@@ -1,123 +1,238 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Keyboard } from 'swiper/modules'
+import 'swiper/css'
 import './Work.css'
 import ford from '../assets/peppermint.png'
 import vector from '../assets/vec.png'
+import mak from '../assets/coming.jpg';
 
 gsap.registerPlugin(ScrollTrigger)
 
-// order matters — position in this array maps directly to the
-// bento layout in Work.css (nth-child 1-3 = top row, 4-5 = middle
-// row, 6 = full-width bottom tile)
+// Each project is one carousel slide.
+// All slides share one size (--work-slide-ratio in Work.css).
+// Swap the postimg placeholders for your own screenshots as you finish each project.
 const PROJECTS = [
-  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: '#' },
+  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: null },
   { name: 'Peppermint', tech: 'React · JS · Gsap', image: ford, url: 'https://peppermint-wip-v1.vercel.app/' },
-  { name: 'Stryde', tech: 'React · model-viewer', image: ford, url: 'https://example.com/stryde' },
-  { name: 'Project 4', tech: 'Tech stack', image: ford, url: 'https://example.com' },
-  { name: 'Project 5', tech: 'Tech stack', image: ford, url: 'https://example.com' },
-  { name: 'Project 6', tech: 'Tech stack', image: ford, url: 'https://example.com' },
+  { name: 'Stryde', tech: 'React · model-viewer', image: mak, url: null },
+  { name: 'Project 4', tech: 'Tech stack', image: mak, url: null },
+  { name: 'Project 5', tech: 'Tech stack', image: mak, url: null },
+  { name: 'Project 6', tech: 'Tech stack', image: mak, url: null },
 ]
+
+const EASE = 'back.out(1.7)'
+const DURATION = 0.3
 
 export default function Work() {
   const sectionRef = useRef(null)
+  const stageRef = useRef(null)
+  const cursorRef = useRef(null)
+  const iconRef = useRef(null)
+  const swiperRef = useRef(null)
+  const [active, setActive] = useState(0)
 
+  // section entrance (single reveal)
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        defaults: { ease: 'power2.out' },
+      gsap.from('.work-stage, .work-info', {
+        opacity: 0,
+        y: 30,
+        duration: 0.7,
+        stagger: 0.12,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top 75%',
           toggleActions: 'play none none reverse',
         },
       })
-
-      tl.from('.work-eyebrow', { opacity: 0, y: 14, duration: 0.5 })
-        .from('.work-headline', { opacity: 0, y: 24, duration: 0.6 }, '-=0.3')
-        .from('.work-descrip', { opacity: 0, y: 16, duration: 0.5 }, '-=0.35')
-        .from('.work-more-btn', { opacity: 0, y: 10, duration: 0.5 }, '-=0.35')
-        .from(
-          '.work-tile',
-          { opacity: 0, y: 40, duration: 0.7, stagger: 0.12 },
-          '-=0.3'
-        )
     }, sectionRef)
+    return () => ctx.revert()
+  }, [])
+
+  // arrow cursor that follows the mouse and flips left/right over the carousel
+  useLayoutEffect(() => {
+    const stage = stageRef.current
+    const cursor = cursorRef.current
+    const icon = iconRef.current
+    if (!stage || !cursor || !icon) return
+    if (window.matchMedia('(pointer: coarse)').matches) return
+
+    let side = null // 'left' | 'right'
+    let x = 0
+    let y = 0
+
+    const sideFor = (clientX) => {
+      const r = stage.getBoundingClientRect()
+      return clientX > r.left + r.width / 2 ? 'right' : 'left'
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(icon, { rotation: -135, opacity: 0, scale: 0.5, transformOrigin: '50% 50%' })
+      const setX = gsap.quickSetter(cursor, 'x', 'px')
+      const setY = gsap.quickSetter(cursor, 'y', 'px')
+
+      const onEnter = (e) => {
+        x = e.clientX
+        y = e.clientY
+        setX(x)
+        setY(y)
+        const r = stage.getBoundingClientRect()
+        side = sideFor(x)
+
+        let startRotation
+        if (y < r.top + r.height / 2) startRotation = -135
+        else startRotation = side === 'right' ? 135 : -315
+
+        gsap.set(icon, { rotation: startRotation })
+        gsap.to(icon, {
+          rotation: side === 'right' ? 0 : -180,
+          scale: 1,
+          opacity: 1,
+          duration: DURATION,
+          ease: EASE,
+        })
+      }
+
+      const onMove = (e) => {
+        x = e.clientX
+        y = e.clientY
+        setX(x)
+        setY(y)
+        const next = sideFor(x)
+        if (side && next !== side) {
+          side = next
+          gsap.to(icon, {
+            rotation: side === 'right' ? 0 : -180,
+            duration: DURATION,
+            ease: EASE,
+            overwrite: 'auto',
+          })
+        }
+      }
+
+      const onLeave = () => {
+        const r = stage.getBoundingClientRect()
+        let out
+        if (y < r.top + r.height / 2) out = side === 'right' ? -135 : -45
+        else out = side === 'right' ? 135 : -315
+        gsap.to(icon, { rotation: out, opacity: 0, scale: 0.3, duration: DURATION, overwrite: 'auto' })
+        side = null
+      }
+
+      stage.addEventListener('mouseenter', onEnter)
+      stage.addEventListener('mousemove', onMove)
+      stage.addEventListener('mouseleave', onLeave)
+
+      return () => {
+        stage.removeEventListener('mouseenter', onEnter)
+        stage.removeEventListener('mousemove', onMove)
+        stage.removeEventListener('mouseleave', onLeave)
+      }
+    }, stage)
 
     return () => ctx.revert()
   }, [])
 
+  const bumpCursor = () => {
+    if (!cursorRef.current) return
+    gsap.fromTo(
+      cursorRef.current,
+      { scale: 0.85 },
+      { scale: 1, duration: 0.3, ease: EASE, overwrite: 'auto' }
+    )
+  }
+
+  const current = PROJECTS[active]
+
   return (
-    <section id="work" className="work snap-section">
+    <section id="work" className="work snap-section" ref={sectionRef}>
+      {/* blurred backdrop follows the active project */}
+      <div
+        className="work-backdrop"
+        style={{ backgroundImage: `url(${current.image})` }}
+        aria-hidden="true"
+      />
+
       <div className="work-inner">
-        <div className="work-header">
-          {/* <div>
-            <h2 className="work-headline">Projects</h2>
-            <p className="work-descrip">
-              A few things I've built recently — from mobile apps to full-stack
-              tools, each one solving a real problem
-            </p>
-          </div> */}
-          {/* <Link to="/projects" className="work-more-btn">
-            View more projects
-            <ArrowRight size={15} />
-          </Link> */}
-        </div>
-
-        <div className="work-grid">
-          {PROJECTS.map((project) => {
-  const hasRealContent = ['Vector', 'Peppermint'].includes(project.name);
-  const isLinkable = ['Peppermint'].includes(project.name);
-
-  return (
-    <div
-      key={project.name}
-      className={`work-tile ${hasRealContent ? 'work-tile-vector' : 'work-tile-skeleton'}`}
-    >
-      {hasRealContent ? (
-        <div
-          className="work-tile-image"
-          style={{ backgroundImage: `url(${project.image})` }}
-        />
-      ) : (
-        <div className="work-tile-image work-skeleton-image" aria-hidden="true">
-          <span className="work-skeleton-block work-skeleton-block-lg" />
-          <span className="work-skeleton-block work-skeleton-block-md" />
-          <span className="work-skeleton-block work-skeleton-block-sm" />
-        </div>
-      )}
-
-      <div className="work-tile-info">
-        <div className="work-tile-text">
-          <p className={`work-tile-name ${!hasRealContent ? 'is-placeholder' : ''}`}>
-            {project.name}
-          </p>
-          <p className={`work-tile-tech ${!hasRealContent ? 'is-placeholder' : ''}`}>
-            {project.tech}
-          </p>
-        </div>
-
-        {isLinkable ? (
-          <a
-            className="work-tile-visit"
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
+        <div className="work-stage" ref={stageRef}>
+          <Swiper
+            className="work-swiper"
+            modules={[Keyboard]}
+            keyboard={{ enabled: true }}
+            loop
+            slidesPerView="auto"
+            spaceBetween={40}
+            centeredSlides
+            onSwiper={(s) => (swiperRef.current = s)}
+            onSlideChange={(s) => {
+              setActive(s.realIndex)
+              bumpCursor()
+            }}
           >
-            Visit site
-            <ArrowRight size={13} />
-          </a>
-        ) : (
-          <span className="work-tile-placeholder">Coming soon</span>
-        )}
-      </div>
-    </div>
-  )
-})}
+            {PROJECTS.map((project) => (
+              <SwiperSlide
+                key={project.name}
+                className="work-slide"
+              >
+                <img
+                  className="work-slide__img"
+                  src={project.image}
+                  alt={`${project.name} preview`}
+                  loading="lazy"
+                  draggable="false"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          <button
+            type="button"
+            className="work-nav work-nav--prev"
+            aria-label="Previous project"
+            onClick={() => swiperRef.current?.slidePrev()}
+          />
+          <button
+            type="button"
+            className="work-nav work-nav--next"
+            aria-label="Next project"
+            onClick={() => swiperRef.current?.slideNext()}
+          />
         </div>
+
+        <div className="work-info">
+          <div className="work-info__text">
+            <p className="work-info__name">{current.name}</p>
+            <p className="work-info__tech">{current.tech}</p>
+          </div>
+
+          {current.url ? (
+            <a
+              className="work-info__visit"
+              href={current.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit site
+              <ArrowRight size={13} />
+            </a>
+          ) : (
+            <span className="work-info__soon">Coming soon</span>
+          )}
+        </div>
+      </div>
+
+      <div className="work-cursor" ref={cursorRef} aria-hidden="true">
+        <svg className="work-cursor__icon" ref={iconRef} viewBox="0 0 117.25 86.75">
+          <path
+            className="work-cursor__path"
+            d="M111.45,42.5,74.65,5.7l-9.9,9.9,20.6,20.6H6.45v14h78.9L64.75,70.8l9.9,9.9,36.8-36.8A1,1,0,0,0,111.45,42.5Z"
+          />
+        </svg>
       </div>
     </section>
   )

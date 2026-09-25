@@ -6,9 +6,10 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother'
 import Hero from './pages/Hero.jsx'
 import About from './pages/About.jsx'
 import ResumeModal from './pages/ResumeModal.jsx'
-import Work from './pages/Work.jsx'
+import Connect from './pages/Work.jsx'
 import Skills from './pages/Skills.jsx'
 import Contact from './pages/Contact.jsx' 
+import HeaderActions from "./pages/HeaderActions.jsx"
 
 // gsap.registerPlugin(ScrollTrigger, ScrollSmoother)
 
@@ -29,11 +30,12 @@ function HomePage() {
     <>
       <div id="smooth-wrapper">
         <main id="smooth-content">
+          
           <Hero onResumeOpen={() => setResumeOpen(true)} />
-          <About />
-          <Work />
+          {/* <About />
+          <Connect />
           <Skills />
-          <Contact />
+          <Contact /> */}
         </main>
       </div>
       {resumeOpen && <ResumeModal onClose={() => setResumeOpen(false)} />}
@@ -44,8 +46,13 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
+         <HeaderActions />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/About" element={<About />} />
+        <Route path="/Connect" element={<Connect />} />
+        <Route path="/Skills" element={<Skills />} />
+        <Route path="/Contact" element={<Contact />} />
       </Routes>
     </BrowserRouter>
   )

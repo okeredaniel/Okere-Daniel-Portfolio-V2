@@ -1,370 +1,219 @@
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@800&family=Space+Grotesk:wght@400;500&display=swap');
-
+/* ---------- Work section (carousel) ---------- */
 .work {
+  --work-text: #919191;
+  --work-bg: #141414;
+  --work-title: #ffffff;
+  --work-accent: #000000;
+  --work-radius: 35px;
+
+  /* Ratio expressed both ways: as a CSS ratio for aspect-ratio, and as two
+     numbers for the calc() below (calc can't divide by a "5 / 3" value). */
+  --work-ratio-w: 5;
+  --work-ratio-h: 3;
+  --work-slide-ratio: var(--work-ratio-w) / var(--work-ratio-h);
+
+  /* The slide's box is sized by height (--work-slide-h), and its width
+     follows from height × ratio. If height only came from vh, a narrow
+     screen could produce a width wider than the screen — that's the bug.
+     Fixing it means also capping height by whatever height keeps the
+     *width* within a safe percentage of the viewport:
+       target width  = 92vw
+       matching height = 92vw × (ratio-h / ratio-w)
+     min() takes whichever constraint (vh-based or vw-based) is smaller. */
+  --work-slide-h: clamp(
+    200px,
+    min(65vh, calc(92vw * var(--work-ratio-h) / var(--work-ratio-w))),
+    560px
+  );
+
   position: relative;
   min-height: 100vh;
-  background: #e6e6e5;
-  font-family: 'Space Grotesk', sans-serif;
   display: flex;
   align-items: center;
-  padding: 40px 32px;
-  z-index: 2;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--work-bg);
+  color: var(--work-text);
+}
+
+.work-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  /* filter: blur(40px); */
+  transform: scale(1.15);
+  /* transition: background-image 0.4s ease; */
+  pointer-events: none;
 }
 
 .work-inner {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 1700px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 4.5rem 0 2rem;
+}
+
+/* ---------- Carousel ---------- */
+.work-stage {
+  position: relative;
+  width: 100%;
+  height: var(--work-slide-h);
+}
+
+.work-swiper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.work-slide {
+  position: relative;
+  height: 100%;
+  width: auto;
+  aspect-ratio: var(--work-slide-ratio);
+  flex-shrink: 0;
+  border-radius: var(--work-radius);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.work-slide__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+/* invisible left/right halves that drive prev/next */
+.work-nav {
+  position: absolute;
+  top: 0;
+  z-index: 5;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: none;
+}
+.work-nav--prev {
+  left: 0;
+}
+.work-nav--next {
+  right: 0;
+}
+.work-nav:focus-visible {
+  outline: 2px solid var(--work-accent);
+  outline-offset: -4px;
+}
+
+/* ---------- Project info ---------- */
+.work-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100% - 3rem, 60rem);
   margin: 0 auto;
 }
 
-.work-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 11px;
-}
-
-.work-eyebrow {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #d97757;
-  font-weight: 600;
-  margin: 0 0 8px;
-}
-
-.work-headline {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 800;
-  font-size: clamp(28px, 4vw, 40px);
-  color: #16171a;
+.work-info__name {
   margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--work-title);
 }
 
-.work-more-btn {
-  display: flex;
+.work-info__tech {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  color: var(--work-text);
+}
+
+.work-info__visit,
+.work-info__soon {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #f5f5f0;
-  background: #16171a;
-  border: none;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
   border-radius: 999px;
-  padding: 11px 20px;
-  cursor: pointer;
+  font-size: 0.85rem;
   white-space: nowrap;
-  transition: transform 180ms ease;
 }
 
-.work-more-btn:hover {
-  transform: translateY(-2px);
-}
-
-/* ---------- bento grid ----------
-   6 virtual columns so tiles can span 2 (thirds), 3 (halves),
-   or 6 (full width). 3 explicit rows match the reference:
-   row 1 = three equal tiles, row 2 = two wide tiles,
-   row 3 = one full-width tile. Needs exactly 6 tiles to fill
-   cleanly — see nth-child(n+7) fallback below for extras. */
-
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 300px 320px 500px;
-  grid-auto-rows: 300px;
-  gap: 14px;
-}
-
-.work-tile {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.384);
-  background: #2d4dac; /* darker tile bg instead of translucent white */
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.work-tile-image {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-color: rgba(160, 160, 160, 0.726);
-  transition: transform 450ms ease;
-}
-
-.work-tile:hover .work-tile-image {
-  transform: scale(1.08);
-}
-
-
-.work-skeleton-image {
-  background-image: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.04) 0%,
-    rgba(255, 255, 255, 0.04) 35%,
-    rgba(255, 255, 255, 0.16) 50%,
-    rgba(255, 255, 255, 0.04) 65%,
-    rgba(255, 255, 255, 0.04) 100%
-  );
-  background-size: 250% 100%;
-  animation: glossy-skeleton 1.8s ease-in-out infinite;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 22px 18px 20px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.work-skeleton-block {
-  display: block;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-@keyframes glossy-skeleton {
-  0% {
-    background-position: 150% 0;
-  }
-  100% {
-    background-position: -150% 0;
-  }
-}
-
-.work-tile:nth-child(1),
-.work-tile:nth-child(2),
-.work-tile:nth-child(3) {
-  grid-column: span 2;
-  grid-row: 1;
-}
-
-.work-tile:nth-child(4) {
-  grid-column: span 3;
-  grid-row: 2;
-}
-
-.work-tile:nth-child(5) {
-  grid-column: span 3;
-  grid-row: 2;
-}
-
-.work-tile:nth-child(6) {
-  grid-column: span 6;
-  grid-row: 3;
-}
-
-/* fallback for a 7th+ tile: half-width, wraps into new rows */
-.work-tile:nth-child(n + 7) {
-  grid-column: span 3;
-}
-
-.work-tile {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 0 10px 0.5px rgba(0, 0, 0, 0.384);
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(10, 10, 10, 0.05);
-}
-
-/* the actual photo — separate layer so it can zoom without
-   affecting the tile's shadow, border-radius, or grid sizing */
-.work-tile-image {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: transform 450ms ease;
-}
-
-.work-tile:hover .work-tile-image {
-  transform: scale(1.08);
-}
-
-.work-tile-skeleton {
-  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.18));
-}
-
-.work-skeleton-image {
-  /* background: linear-gradient(120deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.8) 45%, rgba(255,255,255,0.18) 100%); */
-  background-size: 200% 100%;
-  animation: glossy-skeleton 1.5s ease-in-out infinite;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 22px 18px 20px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
-}
-
-.work-skeleton-block {
-  display: block;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0 0 0 1px rgba(17, 17, 17, 0.04);
-}
-
-.work-skeleton-block-lg {
-  width: 70%;
-  height: 18px;
-}
-
-.work-skeleton-block-md {
-  width: 52%;
-  height: 12px;
-}
-
-.work-skeleton-block-sm {
-  width: 34%;
-  height: 10px;
-}
-
-.work-tile-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.65));
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 250ms ease, transform 250ms ease;
-}
-
-.work-tile:hover .work-tile-info {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.work-tile-name {
-  margin: 0;
-  color: #f5f5f0;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 800;
-  font-size: 16px;
-}
-
-.work-tile-tech {
-  margin: 3px 0 0;
-  color: rgba(245, 245, 240, 0.7);
-  font-size: 11px;
-}
-
-.work-tile-name.is-placeholder,
-.work-tile-tech.is-placeholder,
-.work-tile-placeholder {
-  position: relative;
-  overflow: hidden;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  color: transparent;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
-}
-
-.work-tile-name.is-placeholder {
-  width: 100px;
-  height: 18px;
-}
-
-.work-tile-tech.is-placeholder {
-  width: 130px;
-  height: 12px;
-  margin-top: 10px;
-}
-
-.work-tile-placeholder {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 96px;
-  height: 32px;
-  padding: 0 14px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.work-tile-placeholder::before,
-.work-tile-name.is-placeholder::before,
-.work-tile-tech.is-placeholder::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, rgba(255,255,255,0.12), rgba(255,255,255,0.72), rgba(255,255,255,0.12));
-  background-size: 200% 100%;
-  animation: glossy-skeleton 1.5s ease-in-out infinite;
-}
-
-.work-tile-visit {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  padding: 7px 14px;
-  border-radius: 999px;
-  background: rgba(245, 245, 240, 0.15);
-  border: 1px solid rgba(245, 245, 240, 0.3);
-  color: #f5f5f0;
-  font-size: 11px;
-  font-weight: 600;
+.work-info__visit {
+  color: var(--work-title);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   text-decoration: none;
-  transition: background 200ms ease;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.work-info__visit:hover,
+.work-info__visit:focus-visible {
+  background: var(--work-title);
+  color: var(--work-bg);
 }
 
-.work-tile-visit:hover {
-  background: rgba(245, 245, 240, 0.3);
+.work-info__soon {
+  color: var(--work-text);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
-@keyframes glossy-skeleton {
-  0% {
-   background-position: 200% 0;
+/* ---------- Arrow cursor ---------- */
+.work-cursor {
+  position: fixed;
+  left: -75px;
+  top: -55px;
+  width: 120px;
+  height: 110px;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.work-cursor__icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #fff;
+}
+
+.work-cursor__path {
+  /* stroke: var(--work-accent); */
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* touch devices: no custom cursor, use the normal pointer on the nav zones */
+@media (pointer: coarse) {
+  .work-cursor {
+    display: none;
   }
-  100% {
-   background-position: -200% 0;
+  .work-nav {
+    cursor: pointer;
   }
 }
 
-.work-descrip {
-  font-size: 14px;
-  color: #16171a;
-  max-width: 600px;
-}
-
-/* ---------- mobile ---------- */
-
-@media (max-width: 720px) {
+@media (max-width: 768px) {
   .work {
-    padding: 0px 20px;
+    --work-radius: 24px;
   }
-  .work-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-auto-rows: 220px;
+  .work-info {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .work-tile,
-  .work-tile:nth-child(1),
-  .work-tile:nth-child(2),
-  .work-tile:nth-child(3),
-  .work-tile:nth-child(4),
-  .work-tile:nth-child(5),
-  .work-tile:nth-child(6),
-  .work-tile:nth-child(n + 7) {
-    grid-column: span 1;
-    grid-row: auto;
-    height: 220px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-backdrop {
+    transition: none;
   }
 }

@@ -1,67 +1,96 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react'
-import { GitFork, Link, Mail, Copy, Check, ArrowUpRight } from 'lucide-react'
+import { GitFork, Link, Mail, Copy, Check, ArrowUpRight, ArrowRight } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import ShaderBackground from './ShaderBackground'
 import './Contact.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const SOCIALS = [
-  { label: 'GitHub', href: 'https://github.com/okeredaniel', Icon: GitFork },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/okeredaniel', Icon: Link },
-]
-
 const EMAIL = 'okered764@gmail.com'
 
+const SOCIALS = [
+  { label: 'GitHub', handle: '@okeredaniel', href: 'https://github.com/okeredaniel', Icon: GitFork },
+  { label: 'LinkedIn', handle: '/in/okeredaniel', href: 'https://linkedin.com/in/okeredaniel', Icon: Link },
+]
+
+const timeFmt = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Africa/Lagos',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+})
+const dateFmt = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Africa/Lagos',
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+})
+
+// live Lagos clock + how far through the day it is (0-1)
 function useLagosTime() {
-  const [time, setTime] = useState('')
+  const [now, setNow] = useState({ time: '--:--:--', date: '', progress: 0 })
+
   useEffect(() => {
     const tick = () => {
-      setTime(
-        new Intl.DateTimeFormat('en-GB', {
-          timeZone: 'Africa/Lagos',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        }).format(new Date())
-      )
+      const d = new Date()
+      const time = timeFmt.format(d)
+      const [h, m, s] = time.split(':').map(Number)
+      setNow({
+        time,
+        date: dateFmt.format(d),
+        progress: ((h % 24) * 3600 + m * 60 + s) / 86400,
+      })
     }
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [])
-  return time
+
+  return now
 }
 
 export default function Contact() {
   const [copied, setCopied] = useState(false)
   const sectionRef = useRef(null)
-  const lagosTime = useLagosTime()
+  const { time, date, progress } = useLagosTime()
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(EMAIL).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2200)
-    })
+    navigator.clipboard
+      ?.writeText(EMAIL)
+      .then(() => {
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2200)
+      })
+      .catch(() => {})
+  }
+
+  // cursor-following glow on the glass cards
+  const handleSpotlight = (e) => {
+    const card = e.target.closest('.contact-card')
+    if (!card) return
+    const r = card.getBoundingClientRect()
+    card.style.setProperty('--mx', `${e.clientX - r.left}px`)
+    card.style.setProperty('--my', `${e.clientY - r.top}px`)
   }
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
-        defaults: { ease: 'power2.out' },
-      })
-      tl.from('.contact-eyebrow', { opacity: 0, y: 14, duration: 0.5 })
-        .from('.contact-headline', { opacity: 0, y: 28, duration: 0.7 }, '-=0.3')
-        .from('.contact-email-block', { opacity: 0, y: 20, duration: 0.5 }, '-=0.4')
-        .from('.contact-social-row', { opacity: 0, y: 16, duration: 0.5 }, '-=0.35')
-        .from('.contact-time-widget', { opacity: 0, x: 30, duration: 0.6 }, '-=0.5')
-        .from('.contact-bottom-bar', { opacity: 0, y: 12, duration: 0.4 }, '-=0.2')
+      gsap
+        .timeline({
+          defaults: { ease: 'power3.out' },
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 70%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+        .from('.contact-topbar', { opacity: 0, y: -12, duration: 0.5 })
+        .from('.contact-line > span', { yPercent: 110, duration: 0.9, stagger: 0.12 }, '-=0.2')
+        .from('.contact-lead', { opacity: 0, y: 16, duration: 0.6 }, '-=0.5')
+        .from('.contact-card', { opacity: 0, y: 36, duration: 0.7, stagger: 0.12 }, '-=0.4')
+        .from('.contact-bottom-bar', { opacity: 0, duration: 0.5 }, '-=0.3')
     }, sectionRef)
 
     return () => ctx.revert()
@@ -69,78 +98,125 @@ export default function Contact() {
 
   return (
     <section id="contact" className="contact snap-section" ref={sectionRef}>
+      <ShaderBackground />
+      <div className="contact-scrim" aria-hidden="true" />
+
       <div className="contact-inner">
+        {/* Top bar */}
+        <div className="contact-topbar">
+          <p className="contact-eyebrow">Let's connect</p>
+          <p className="contact-status">
+            <span className="contact-status-dot" />
+            Available for work · Lagos, NG
+          </p>
+        </div>
 
-        {/* Top divider line */}
-        <div className="contact-divider" />
+        {/* Headline */}
+        <h2 className="contact-headline">
+          <span className="contact-line">
+            <span>Let's build</span>
+          </span>
+          <span className="contact-line">
+            <span className="contact-accent">something great.</span>
+          </span>
+        </h2>
+        <p className="contact-lead">
+          Got a project, an idea, or just want to say hi? My inbox is open.
+        </p>
 
-        <div className="contact-grid">
+        {/* Cards */}
+        <div className="contact-grid" onPointerMove={handleSpotlight}>
+          {/* Email */}
+          <div className="contact-card contact-card--mail">
+            <div className="contact-card-head">
+              <span className="contact-card-icon">
+                <Mail size={16} />
+              </span>
+              <span className="contact-card-label">Email me</span>
+            </div>
 
-          {/* Left: Copy call-to-action */}
-          <div className="contact-left">
-            <p className="contact-eyebrow">Let's Connect</p>
-            <h2 className="contact-headline">
-              Let's build<br />something great.
-            </h2>
+            <a className="contact-email" href={`mailto:${EMAIL}`}>
+              {EMAIL}
+            </a>
 
-            {/* Copy email block */}
-            <button
-              className={`contact-email-block ${copied ? 'is-copied' : ''}`}
-              onClick={handleCopy}
-              aria-label="Copy email address"
-            >
-              <div className="contact-email-icon">
-                {copied ? <Check size={16} strokeWidth={2.5} /> : <Mail size={16} strokeWidth={2} />}
-              </div>
-              <div className="contact-email-text">
-                <span className="contact-email-label">{copied ? 'Copied!' : 'Email me'}</span>
-                <span className="contact-email-value">{EMAIL}</span>
-              </div>
-              <div className="contact-copy-icon">
-                {copied ? <Check size={14} /> : <Copy size={14} />}
-              </div>
-            </button>
+            <div className="contact-actions">
+              <a className="contact-btn contact-btn--primary" href={`mailto:${EMAIL}`}>
+                Start a project
+                <ArrowRight size={15} />
+              </a>
+              <button
+                type="button"
+                className={`contact-btn contact-btn--ghost ${copied ? 'is-copied' : ''}`}
+                onClick={handleCopy}
+                aria-label="Copy email address"
+              >
+                {copied ? <Check size={15} /> : <Copy size={15} />}
+                <span role="status">{copied ? 'Copied!' : 'Copy email'}</span>
+              </button>
+            </div>
+          </div>
 
-            {/* Socials */}
-            <div className="contact-social-row">
-              {SOCIALS.map(({ label, href, Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-social-link"
-                >
-                  <Icon size={16} />
-                  <span>{label}</span>
-                  <ArrowUpRight size={13} className="contact-social-arrow" />
-                </a>
+          {/* Socials */}
+          <div className="contact-card contact-card--social">
+            <div className="contact-card-head">
+              <span className="contact-card-label">Find me online</span>
+            </div>
+
+            <ul className="contact-social-list">
+              {SOCIALS.map(({ label, handle, href, Icon }) => (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-social-link"
+                  >
+                    <span className="contact-social-icon">
+                      <Icon size={16} />
+                    </span>
+                    <span className="contact-social-text">
+                      <span className="contact-social-name">{label}</span>
+                      <span className="contact-social-handle">{handle}</span>
+                    </span>
+                    <ArrowUpRight size={16} className="contact-social-arrow" />
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
-          {/* Right: Live time widget */}
-          <div className="contact-right">
-            <div className="contact-time-widget">
-              <div className="contact-time-header">
-                <span className="contact-time-dot" />
-                <span className="contact-time-label">Available for work · Lagos, NG</span>
+          {/* Local time */}
+          <div className="contact-card contact-card--time">
+            <div className="contact-card-head">
+              <span className="contact-card-label">Local time · Lagos</span>
+            </div>
+
+            <p className="contact-clock">{time}</p>
+            <p className="contact-date">{date}</p>
+
+            <div className="contact-day" style={{ '--p': progress }}>
+              <div className="contact-day-track">
+                <div className="contact-day-fill" />
               </div>
-              <p className="contact-time-clock">{lagosTime}</p>
-              <p className="contact-time-zone">WAT · UTC+1</p>
+              <div className="contact-day-ticks">
+                <span>00</span>
+                <span>06</span>
+                <span>12</span>
+                <span>18</span>
+                <span>24</span>
+              </div>
             </div>
-          </div>
 
+            <p className="contact-zone">WAT · UTC+1</p>
+          </div>
         </div>
 
         {/* Bottom bar */}
         <div className="contact-bottom-bar">
-          <p className="contact-footer-copy">
-            © {new Date().getFullYear()} Daniel Okere.
-          </p>
-          <p className="contact-footer-right">Lagos, Nigeria</p>
+          <p>© {new Date().getFullYear()} Daniel Okere.</p>
+          <p className="contact-hint">Move your cursor to look around</p>
+          <p>Lagos, Nigeria</p>
         </div>
-
       </div>
     </section>
   )

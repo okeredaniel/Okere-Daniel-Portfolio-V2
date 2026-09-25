@@ -101,14 +101,15 @@
   position: relative;
   z-index: 3;
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
   padding: 27px 32px;
   margin-top: 0.3rem;
 }
 
 .logo-wrap {
-  display: inline-flex;
+  display: flex;
+  justify-content: end;
   align-items: center;
   gap: 5px;
 }
@@ -204,8 +205,8 @@
   position: relative;
   z-index: 2;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
   gap: 32px;
   flex-wrap: wrap;
   padding: 0 40px 50px;
@@ -242,14 +243,16 @@
   margin: 0 0 18px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 800;
-  font-size: 3rem;
-  line-height: 1.05;
+  font-size: 2.5rem;
+  line-height: 0.9;
   letter-spacing: -0.02em;
-  color: #070707;
+  color: #f8f7f7;
+  text-align: center;
 }
 
 .cta-group {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -391,6 +394,12 @@
 @media (max-width: 433px) {
   .tagline {
     font-size: 1.9rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .tagline {
+    font-size: 1.7rem;
   }
 }
 

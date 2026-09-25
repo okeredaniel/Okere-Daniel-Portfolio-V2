@@ -1,74 +1,102 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import { ArrowDown } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText' // free in gsap 3.13+
 import './About.css'
-import Cube from './Cubecarousel.jsx'
+import vector from '../assets/vec.png'
+import peppermint from '../assets/peppermint.png'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText)
 
-const STATS = [
-  { value: '10+', label: 'Projects' },
-  { value: '5+', label: 'Languages' },
-  { value: '1', label: 'School' },
-  { value: "'26", label: 'Grad year' },
-  { value: '3yrs', label: 'Proficiency' },
-]
+// a highlighted phrase that reveals an image on hover
+function HoverText({ image, alt, children }) {
+  return (
+    <span className="about-hover">
+      {children}
+      <span className="about-img">
+        <img src={image} alt={alt} />
+      </span>
+    </span>
+  )
+}
 
 export default function About() {
   const sectionRef = useRef(null)
+  const textRef = useRef(null)
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      const items = gsap.utils.toArray('.about-reveal')
-      gsap.from(items, {
-        opacity: 0,
-        y: 30,
-        duration: 0.7,
-        ease: 'power2.out',
-        stagger: 0.12,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 70%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-    }, sectionRef)
+  useEffect(() => {
+    let ctx
+    let cancelled = false
 
-    return () => ctx.revert()
+    const init = () => {
+      if (cancelled || !sectionRef.current || !textRef.current) return
+
+      ctx = gsap.context(() => {
+        // split after fonts load so the line breaks are measured correctly
+        const split = SplitText.create(textRef.current, {
+          type: 'lines',
+          linesClass: 'split-line',
+        })
+
+        gsap
+          .timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 60%',
+              once: true,
+            },
+          })
+          .to('.about-subtitle', { opacity: 0.7, duration: 0.4 }, '>0.5')
+          .to('.about-text', { opacity: 1, duration: 0 }, '<')
+          .fromTo(
+            split.lines,
+            { y: '100%' },
+            {
+              y: 0,
+              opacity: 1,
+              ease: 'sine.out',
+              transformOrigin: 'top',
+              stagger: 0.1,
+              duration: 1.2,
+            },
+            '<0.4'
+          )
+          .to('.about-down', { opacity: 1, ease: 'sine.out', duration: 0.4 }, '>')
+
+        return () => split.revert()
+      }, sectionRef)
+    }
+
+    document.fonts.ready.then(init)
+
+    return () => {
+      cancelled = true
+      ctx?.revert()
+    }
   }, [])
 
   return (
-    <section id="about" className="about snap-section" ref={sectionRef}>
-      <div className="about-inner">
-        <div className="about-columns about-reveal">
-          <div className="about-columns-left">
-            <Cube />
-          </div>
+    <section id="about" className="about" ref={sectionRef}>
+      <div className="about-subtitle">about</div>
 
-          <div className="about-columns-right">
-            <p className="about-eyebrow about-reveal">About Me</p>
+      <div className="about-text" ref={textRef}>
+        I turn ideas into products building{' '}
+        {/* <HoverText image={vector} alt="Vector dashboard"> */}
+        <span className='po'> full-stack apps</span>
+         
+        {/* </HoverText>{' '} */}
+        with React, Supabase, Rust and Python, crafting{' '}
+        {/* <HoverText image={peppermint} alt="Peppermint landing page"> */}
+        <span className='po'>animated interfaces</span>
+          
+        {/* </HoverText>{' '} */}
+        with GSAP, and shipping mobile with Flutter and Java behind the backend.
+      </div>
 
-            <h2 className="about-headline about-reveal">
-              Turning Ideas Into Products
-            </h2>
-
-            {/* <h3 className="about-subheading about-reveal">Built From Zero.</h3> */}
-            <p className="about-text about-reveal">
-              Software engineering student at Aptech, Lagos, working across Flutter,
-              React, Python, and Java. Turning ideas into real, working products
-              instead of just talking about them.
-            </p>
-          </div>
-        </div>
-
-        {/* <div className="about-stats about-reveal">
-          {STATS.map((stat) => (
-            <div className="about-stat" key={stat.label}>
-              <p className="about-stat-value">{stat.value}</p>
-              <p className="about-stat-label">{stat.label}</p>
-            </div>
-          ))}
-        </div> */}
+      <div className="about-down">
+        {/* <ArrowDown className="about-down__icon" strokeWidth={1.5} /> */}
       </div>
     </section>
   )

@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+.connect-wrapper {
+  --bg-color: #000000;
+  --text-main: #333333;
+  --text-muted: #7a8b99;
+  --clay-base: #e6eef5;
+  --clay-light: #ffffff;
+  --clay-dark: #c6d5e3;
+  --clay-accent: #333333;
+  --shadow-outset: 12px 12px 24px var(--clay-dark),
+    -12px -12px 24px var(--clay-light);
+  --shadow-inset: inset 4px 4px 8px rgba(255, 255, 255, 0.8),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.05);
+  --shadow-btn-outset: 6px 6px 12px rgba(0, 0, 0, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.1);
+
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Inter", sans-serif;
+}
+
+.connect-wrapper * {
+  box-sizing: border-box;
+}
+
+/* Clay Utility Classes */
+.clay-box {
+  background: var(--clay-base);
+  border-radius: 30px;
+  box-shadow: var(--shadow-outset), var(--shadow-inset);
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  transition: transform 0.3s ease;
+}
+
+/* Spacers for scrolling context */
+.spacer {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Main Section */
+.connect-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 4rem 0;
+  position: relative;
+}
+
+/* Typography */
+.subtitle {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 3rem;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8),
+    -1px -1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Carousel 3D Setup */
+.carousel-viewport {
+  width: 100%;
+  height: 55vh;
+  perspective: 1200px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: 4rem;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+}
+
+.carousel-track {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 0 calc(50vw - 175px);
+  transform-style: preserve-3d;
+}
+
+.carousel-item {
+  flex: 0 0 350px;
+  height: 400px;
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.carousel-item .clay-box {
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  filter: saturate(0.9) contrast(1.1);
+}
+
+/* Form Styling */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.clay-input-group {
+  display: flex;
+  width: 100%;
+  background: var(--clay-base);
+  border-radius: 16px;
+  box-shadow: var(--shadow-outset), var(--shadow-inset);
+  padding: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.clay-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.clay-input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.clay-btn {
+  background: var(--clay-accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0 2rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn-outset),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.clay-btn:active {
+  transform: scale(0.96);
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .carousel-item {
+    flex: 0 0 260px;
+    height: 320px;
+  }
+
+  .carousel-track {
+    padding: 0 calc(50vw - 130px);
+    gap: 1.5rem;
+  }
+
+  .clay-input-group {
+    flex-direction: column;
+    border-radius: 24px;
+    padding: 12px;
+  }
+
+  .clay-btn {
+    padding: 1rem;
+    margin-top: 8px;
+  }
+}
