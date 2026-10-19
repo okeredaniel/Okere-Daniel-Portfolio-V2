@@ -9,6 +9,8 @@ import './Work.css'
 import ford from '../assets/peppermint.png'
 import vector from '../assets/vec.png'
 import mak from '../assets/coming.jpg';
+import nest from '../assets/nestly.jpeg'
+import mimiaka from '../assets/mimiaka.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -16,10 +18,10 @@ gsap.registerPlugin(ScrollTrigger)
 // All slides share one size (--work-slide-ratio in Work.css).
 // Swap the postimg placeholders for your own screenshots as you finish each project.
 const PROJECTS = [
-  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: null },
+  { name: 'Vector', tech: 'React · Supabase · Rust · Python', image: vector, url: 'https://github.com/okeredaniel' },
   { name: 'Peppermint', tech: 'React · JS · Gsap', image: ford, url: 'https://peppermint-wip-v1.vercel.app/' },
-  { name: 'Stryde', tech: 'React · model-viewer', image: mak, url: null },
-  { name: 'Project 4', tech: 'Tech stack', image: mak, url: null },
+  { name: 'Nestly', tech: 'React-Native · Firebase', image: nest, url: 'https://github.com/okeredaniel/Nestly' },
+  { name: 'Mimiaka', tech: 'Next Js  · Tailwind CSS  ·  GSAP', image: mimiaka, url: 'https://mimiaka.vercel.app/' },
   { name: 'Project 5', tech: 'Tech stack', image: mak, url: null },
   { name: 'Project 6', tech: 'Tech stack', image: mak, url: null },
 ]
